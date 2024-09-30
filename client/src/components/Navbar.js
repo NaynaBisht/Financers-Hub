@@ -9,12 +9,13 @@ const Navbar = () => {
                 </div>
                 <ul className="flex space-x-8 text-white">
                     <li className="text-lg"><a href="#home">Home</a></li>
-                    <li className="text-lg"><a href="#msmes">MSMEs</a></li>
-                    <li className="text-lg"><a href="#investment-requests">Investment Requests</a></li>
+                    <li className="text-lg"><a href="#msmes">About Us</a></li>
+                    <li className="text-lg"><a href="#services">Our Services</a></li>
+                    <li className="text-lg"><a href="#contact">Contact Us</a></li>
                 </ul>
-                <div>
+                {/* <div>
                     <a href="register.html" className="bg-[#C25D39] text-white px-4 py-2 rounded-md hover:bg-[#A13A28]">Register</a>
-                </div>
+                </div> */}
             </div>
         </nav>
     );
