@@ -9,8 +9,9 @@ const NavbarMSME = () => {
   };
 
   return (
-    <nav className="bg-[#2B1308] bg-opacity-90 py-4 shadow-md">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <nav className="bg-[#2B1308] bg-opacity-90 py-4 px-3 shadow-xl">
+      <div className="container mx-auto flex justify-between items-center px-2">
+
         <div className="flex items-center space-x-4">
           <img src="/images/logo.png" alt="FinancersHub Logo" className="w-12 h-12" />
           <h1 className="text-3xl text-white font-bold">FinancersHub</h1>
@@ -25,18 +26,18 @@ const NavbarMSME = () => {
           </button>
         </div>
 
-        <ul className={`hidden md:flex space-x-8 text-white`}>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/apply-loan">Apply for Loan</Link></li>
-          <li><Link to="/dashboard">Dashboard</Link></li>
-          <li><Link to="/financial-literacy">Financial Literacy</Link></li>
-          <li><Link to="/government-schemes">Government Schemes</Link></li>
-          <li><Link to="/support">Support</Link></li>
-          <li><Link to="/profile">Profile</Link></li>
+        <ul className={`hidden md:flex space-x-7 text-white`}>
+          <li><Link to="/msme">Home</Link></li>
+          {/* <li><Link to="/ApplyLoan">Apply for Loan</Link></li> */}
+          <li><Link to="/Dashboard">Dashboard</Link></li>
+          <li><Link to="/FinancialLiteracy">Financial Literacy</Link></li>
+          <li><Link to="/GovSchemes">Government Schemes</Link></li>
+          <li><Link to="/Support">Support</Link></li>
+          <li><Link to="/Profile">Profile</Link></li>
         </ul>
 
         <div className="hidden md:block">
-          <a href="register.html" className="bg-[#C25D39] text-white px-4 py-2 rounded-md hover:bg-[#A13A28]">Register</a>
+          <a href="register.html" className="bg-[#C25D39] text-white px-4 py-2 rounded-md hover:bg-[#A13A28]">Sign Out</a>
         </div>
       </div>
 
@@ -45,13 +46,13 @@ const NavbarMSME = () => {
         <div className="md:hidden">
           <ul className="bg-[#2B1308] bg-opacity-90 text-white">
             <li><Link to="/" className="block px-4 py-2">Home</Link></li>
-            <li><Link to="/apply-loan" className="block px-4 py-2">Apply for Loan</Link></li>
-            <li><Link to="/dashboard" className="block px-4 py-2">Dashboard</Link></li>
-            <li><Link to="/financial-literacy" className="block px-4 py-2">Financial Literacy</Link></li>
-            <li><Link to="/government-schemes" className="block px-4 py-2">Government Schemes</Link></li>
-            <li><Link to="/support" className="block px-4 py-2">Support</Link></li>
-            <li><Link to="/profile" className="block px-4 py-2">Profile</Link></li>
-            <li><Link to="register.html" className="block px-4 py-2 bg-[#C25D39] text-white rounded-md hover:bg-[#A13A28]">Register</Link></li>
+            {/* <li><Link to="/ApplyLoan" className="block px-4 py-2">Apply for Loan</Link></li> */}
+            <li><Link to="/Dashboard" className="block px-4 py-2">Dashboard</Link></li>
+            <li><Link to="/FinancialLiteracy" className="block px-4 py-2">Financial Literacy</Link></li>
+            <li><Link to="/GovSchemes" className="block px-4 py-2">Government Schemes</Link></li>
+            <li><Link to="/Support" className="block px-4 py-2">Support</Link></li>
+            <li><Link to="/Profile" className="block px-4 py-2">Profile</Link></li>
+            <li><Link to="register.html" className="block px-4 py-2 bg-[#C25D39] text-white rounded-md hover:bg-[#A13A28]">Sign Out</Link></li>
           </ul>
         </div>
       )}
