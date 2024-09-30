@@ -4,7 +4,9 @@
     margin: 0;
     padding: 0;
 }
-
+.text-center {
+    min-height: 100vh; /* Ensure the content takes full height */
+}
 
 
 
