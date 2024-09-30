@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar.js';
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from 'axios'; 
 
 const Register = () => {
     const [isSignUp, setIsSignUp] = useState(true);
