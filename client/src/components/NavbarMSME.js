@@ -37,7 +37,7 @@ const NavbarMSME = () => {
         </ul>
 
         <div className="hidden md:block">
-          <a href="register.html" className="bg-[#C25D39] text-white px-4 py-2 rounded-md hover:bg-[#A13A28]">Sign Out</a>
+          <a href="/" className="bg-[#C25D39] text-white px-4 py-2 rounded-md hover:bg-[#A13A28]">Sign Out</a>
         </div>
       </div>
 

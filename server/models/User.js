@@ -1,5 +1,4 @@
-import { Schema, model } from 'mongoose';
-import bcrypt from 'bcryptjs'; // Import bcrypt for password hashing
+import { Schema, model } from 'mongoose'; // Removed bcrypt
 
 const userSchema = new Schema({
     companyName: {
@@ -25,7 +24,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: true, // Password stored as plain text now
     },
     annualRevenue: {
         type: Number,
@@ -59,15 +58,8 @@ const userSchema = new Schema({
     },
 });
 
-// Hash password before saving to the database
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
-        return next();
-    }
-    const salt = await bcrypt.genSalt(10); // Generate salt
-    this.password = await bcrypt.hash(this.password, salt); // Hash the password
-    next();
-});
+// Removed pre-save password hashing middleware
+// No hashing now
 
 const User = model('User', userSchema);
 export default User;

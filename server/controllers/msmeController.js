@@ -1,5 +1,5 @@
 import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';  // Import bcrypt for password hashing
 
 // Register new user with file uploads
 const register = async (req, res) => {
@@ -20,6 +20,10 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'User already exists!' });
         }
 
+        // Hash the password using bcrypt
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         // Create paths to save the files (Assuming you want to save in a public directory)
         const profitAndLossPath = profitAndLoss ? `/uploads/${profitAndLoss}` : null;
         const balanceSheetPath = balanceSheet ? `/uploads/${balanceSheet}` : null;
@@ -28,12 +32,7 @@ const register = async (req, res) => {
         const businessRegDocPath = businessRegDoc ? `/uploads/${businessRegDoc}` : null;
         const collateralDocsPath = collateralDocs ? `/uploads/${collateralDocs}` : null;
 
-        // Hash the password before saving
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt); 
-        console.log('Hashed Password:', hashedPassword); // Log the hashed password during registration
-
-        // Create new user
+        // Create new user with hashed password
         const newUser = new User({
             companyName,
             industryType,
@@ -53,11 +52,12 @@ const register = async (req, res) => {
         });
 
         // Save user
-        await newUser.save();
+        const savedUser = await newUser.save();
 
-        res.status(201).json({ message: 'User registered successfully!' });
+        // Return the new user's ID
+        res.status(201).json({ message: 'User registered successfully!', userId: savedUser._id });
     } catch (error) {
-        console.error('Registration error:', error); // Log the error for debugging
+        console.error('Registration error:', error); 
         res.status(500).json({ error: 'User registration failed!' });
     }
 };
@@ -65,7 +65,6 @@ const register = async (req, res) => {
 // Login user
 const login = async (req, res) => {
     const { email, password } = req.body;
-
 
     try {
         // Find user by email
@@ -76,24 +75,20 @@ const login = async (req, res) => {
             return res.status(404).json({ message: 'User not found!' });
         }
 
-        console.log('Password from database:', user.password);
-        console.log('Entered Password:', password);
-        // Compare entered password with the hashed password
+        // Compare the entered password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password match result:', isMatch); // Log the result of the password comparison
+        console.log('Password comparison result:', isMatch);
+
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials!' });
         }
 
-        // If credentials are valid, return success response
+        // Return success response with the user ID
         res.status(200).json({ message: 'Login successful!', userId: user._id });
     } catch (error) {
-        console.error('Login error:', error); // Log the error for debugging
+        console.error('Login error:', error);
         res.status(500).json({ error: 'Login failed!' });
     }
-    
-    console.log('User fetched from database:', User);
 };
-
 
 export default { register, login };
