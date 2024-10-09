@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavbarMSME from '../../components/NavbarMSME.js';
+import axios from 'axios'; // Import axios for API requests
 
 const Profile = () => {
     // Sample user data for demonstration
@@ -20,6 +21,23 @@ const Profile = () => {
 
     const [isEditing, setIsEditing] = useState(false);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axios.get('/api/users/profile'); // Adjust the endpoint as per your backend route
+                setUserData(response.data); // Update userData with fetched data
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData(); // Call the function to fetch data
+    }, []);
+
+    if (!userData) {
+        return <div>Loading...</div>;  // Show loading indicator while fetching
+    }
+
     // Handle input change for text fields
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -38,17 +56,24 @@ const Profile = () => {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Profile Updated:", userData);
-        toggleEdit(); // Switch back to view mode after submission
+        try {
+            await axios.put('/api/users/profile', userData); // Adjust the endpoint for updating user data
+            console.log("Profile Updated:", userData);
+            toggleEdit(); // Switch back to view mode after submission
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
     };
 
     return (
         <div>
             <NavbarMSME />
             <div className="flex mt-7 items-center justify-center p-6">
+
                 <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-3xl">
+
                     <h1 className="text-3xl font-bold mb-10 bg-[#C25D39] text-center text-white py-3 rounded-lg">
                         {isEditing ? 'Edit Profile' : 'Your Profile'}
                     </h1>
