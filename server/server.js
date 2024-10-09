@@ -3,7 +3,7 @@ import express from 'express';
 import { connect } from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
-import msmeRoutes from './routes/msmeRoutes.js'; // Add .js extension here
+import msmeRoutes from './routes/msmeRoutes.js'; 
 
 config();
 
@@ -24,7 +24,9 @@ connect(process.env.MONGO_URI, {
 });
 
 // Use the msmeRoutes
-app.use('/api/msmes', msmeRoutes); // Ensure routes are correctly set up
+app.use('/api/msmes', msmeRoutes); 
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
