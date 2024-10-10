@@ -29,7 +29,7 @@ const NavbarINVESTOR = () => {
         <ul className={`hidden md:flex space-x-7 text-white`}>
           <li><Link to="/investor">Home</Link></li>
           {/* <li><Link to="/ApplyLoan">Apply for Loan</Link></li> */}
-          <li><Link to="/Dashboard">Dashboard</Link></li>
+          <li><Link to="/DashboardInvestor">Dashboard</Link></li>
           <li><Link to="/FinancialLiteracy">Financial Literacy</Link></li>
           <li><Link to="/GovSchemes">Government Schemes</Link></li>
           <li><Link to="/Support">Support</Link></li>
@@ -47,7 +47,7 @@ const NavbarINVESTOR = () => {
           <ul className="bg-[#2B1308] bg-opacity-90 text-white">
             <li><Link to="/" className="block px-4 py-2">Home</Link></li>
             {/* <li><Link to="/ApplyLoan" className="block px-4 py-2">Apply for Loan</Link></li> */}
-            <li><Link to="/Dashboard" className="block px-4 py-2">Dashboard</Link></li>
+            <li><Link to="/DashboardInvestor" className="block px-4 py-2">Dashboard</Link></li>
             <li><Link to="/FinancialLiteracy" className="block px-4 py-2">Financial Literacy</Link></li>
             <li><Link to="/GovSchemes" className="block px-4 py-2">Government Schemes</Link></li>
             <li><Link to="/Support" className="block px-4 py-2">Support</Link></li>
