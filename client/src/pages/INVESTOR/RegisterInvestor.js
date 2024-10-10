@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar.js';
@@ -5,6 +6,7 @@ import axios from 'axios';
 
 const RegisterInvestor = () => {
     const [isSignUp, setIsSignUp] = useState(true);
+
     const [formData, setFormData] = useState({
         fullName: '',
         dateOfBirth: '',
@@ -64,7 +66,7 @@ const RegisterInvestor = () => {
                     formDataToSend.append(key, formData[key]);
                 });
 
-                const response = await axios.post('http://localhost:5000/api/msmes/register', formDataToSend, {
+                const response = await axios.post('http://localhost:5000/api/investors/register', formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -91,14 +93,15 @@ const RegisterInvestor = () => {
                     password: '', // Reset password
                 });
                 setIsSignUp(false); // Switch to Sign In state
+                setFormData({ ...formData, email: response.data.email }); // Preserve the email    
             } else {
                 // Handle Sign In logic
-                const response = await axios.post('http://localhost:5000/api/investors/register', {
+                const response = await axios.post('http://localhost:5000/api/investors/login', {
                     email: formData.email,
                     password: formData.password,
                 });
                 console.log('Sign In Response:', response.data);
-                navigate('/investor'); // Redirect to the landing page
+                navigate('/investor/dashboardinvestor', { replace: true }); // Redirect to the landing page
             }
         } catch (error) {
             console.error('Error during API call:', error.response ? error.response.data : error.message);
@@ -223,6 +226,18 @@ const RegisterInvestor = () => {
                                         className="border rounded w-full p-2"
                                     />
                                 </div>
+                                <div className="mb-4">
+                                <label className="block font-bold text-lg mb-1" htmlFor="password">Password</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    required
+                                    className="border rounded w-full p-2"
+                                />
+                            </div>
                             </div>
 
                             {/* Risk Tolerance */}
@@ -300,18 +315,17 @@ const RegisterInvestor = () => {
                                 <label htmlFor="termsAccepted" className="text-lg">I accept the terms and conditions</label>
                             </div>
 
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Sign Up</button>
+                            
                         </>
                     ) : (
                         <>
+                            {/* Sign In Fields */}
                             <div className="mb-4">
-                                <label className="block font-bold text-lg mb-1" htmlFor="email">Email Address</label>
+                                <label className="block font-bold text-lg mb-1" htmlFor="email">Email</label>
                                 <input
-                                    id="email"
-                                    name="email" // Ensure name is set
                                     type="email"
+                                    id="email"
+                                    name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     required
@@ -321,25 +335,31 @@ const RegisterInvestor = () => {
                             <div className="mb-4">
                                 <label className="block font-bold text-lg mb-1" htmlFor="password">Password</label>
                                 <input
-                                    id="password"
-                                    name="password" // Ensure name is set
                                     type="password"
+                                    id="password"
+                                    name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     required
                                     className="border rounded w-full p-2"
                                 />
                             </div>
-
-                            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-                            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded mt-4">Sign In</button>
                         </>
                     )}
+                   <button type="submit" className="bg-[#C25D39] font-bold text-lg text-white px-4 py-2 rounded-md hover:bg-[#A13A28] w-full">
+                        {isSignUp ? 'Sign Up' : 'Sign In'}
+                    </button>
                 </form>
+                <p className="mt-4 text-sm">
+                    {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+                    <button onClick={() => setIsSignUp(!isSignUp)} className="text-blue-500 hover:underline">
+                        {isSignUp ? 'Sign In' : 'Sign Up'}
+                    </button>
+                </p>
             </div>
         </div>
     );
 };
+
 
 export default RegisterInvestor;
