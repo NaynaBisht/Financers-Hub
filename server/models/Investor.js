@@ -1,3 +1,5 @@
+// models/Investor.js
+import mongoose from 'mongoose';
 import { Schema, model } from 'mongoose';
 
 const investorSchema = new Schema({
@@ -7,10 +9,6 @@ const investorSchema = new Schema({
     },
     dateOfBirth: {
         type: Date,
-        required: true,
-    },
-    contactInfo: {
-        type: String,
         required: true,
     },
     email: {
@@ -44,27 +42,11 @@ const investorSchema = new Schema({
     },
     riskTolerance: {
         type: String,
-        enum: ['Conservative', 'Moderate', 'Aggressive'],
-        default: 'Conservative',
         required: true,
     },
     amountToInvest: {
         type: Number,
         required: true,
-    },
-    documents: {
-        netWorthDocs: {
-            type: String, // File path or URL
-            required: true,
-        },
-        sourceOfFundsDocs: {
-            type: String, // File path or URL
-            required: true,
-        },
-        investmentExperienceDocs: {
-            type: String, // File path or URL
-            required: true,
-        },
     },
     termsAccepted: {
         type: Boolean,
@@ -72,11 +54,26 @@ const investorSchema = new Schema({
     },
     password: {
         type: String,
-        required: true, // Storing password as plain text now
+        required: true,
     },
-    // loans: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Loan' }], // Add this line to the investorSchema
+    documents: {
+        netWorthDocs: {
+            type: String,
+            required: true,
+        },
+        sourceOfFundsDocs: {
+            type: String,
+            required: true,
+        },
+        investmentExperienceDocs: {
+            type: String,
+            required: true,
+        },
+    },
+}
+//, { timestamps: true }
+);
 
-});
+const Investor = mongoose.model('Investor', investorSchema);
 
-const Investor = model('Investor', investorSchema);
 export default Investor;
