@@ -1,44 +1,18 @@
-import { Router } from 'express';
-import Loan from '../models/Loan.js'; 
-import Investor from '../models/Investor.js'; 
+const express = require('express');
+const router = express.Router();
+const Loan = require('../models/Loan'); // Adjust the path as necessary
 
-const router = Router();
-
-router.post('/ApplyLoan', async (req, res) => {
-    const { amount, investorId } = req.body;
-
-    // Validate incoming data
-    if (!amount || !investorId) {
-        return res.status(400).json({ success: false, message: 'Amount and investor ID are required' });
-    }
-
+// GET /loans
+router.get('/loans', async (req, res) => {
     try {
-        // Check if the investor exists
-        const investor = await Investor.findById(investorId);
-        if (!investor) {
-            return res.status(404).json({ success: false, message: 'Investor not found' });
-        }
-
-        // Create a new loan instance
-        const loan = new Loan({
-            amount: amount,
-            investorId: investorId,
-            status: 'pending'
-        });
-
-        // Save the loan to the database
-        await loan.save();
-
-        // Update the investor document to associate the loan
-        await Investor.findByIdAndUpdate(investorId, {
-            $push: { loans: loan._id } // Assuming `loans` is an array in the Investor schema
-        });
-
-        res.status(200).json({ success: true, message: 'Loan applied successfully!' });
+        const loans = await Loan.find();
+        console.log('Fetched loans:', loans); // Log fetched loans
+        res.status(200).json(loans);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Error applying loan' });
+        console.error('Error fetching loans:', error); // Log error
+        res.status(500).json({ message: 'Failed to fetch loans', error: error.message });
     }
 });
 
-export default router;
+// Export the router to use it in your server file
+module.exports = router;

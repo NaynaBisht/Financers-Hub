@@ -11,7 +11,7 @@ import GovSchemes from "./pages/MSME/GovSchemes.js";
 import FinancialLiteracy from "./pages/MSME/FinancialLiteracy.js";
 import LoanStatus from "./pages/MSME/LoanStatus.js";
 import Support from "./pages/MSME/Support.js";
-
+import Chatbot from "./components/Chatbot.js"
 
 // Import investor pages
 import LandingInvestor from "./pages/INVESTOR/LandingInvestor.js";
@@ -46,12 +46,13 @@ const App = () => {
                     <Route path="/investor" element={<LandingInvestor />} /> 
                     <Route path="/investor/register" element={<RegisterInvestor />} />  {/* Investor Registration */}
                     <Route path="/investor/dashboardinvestor" element={<DashboardInvestor />} />  
-                    <Route path="/investor/investmentopportunities" element={<InvestmentOpportunities />} />  
+                    <Route path="/InvestmentOpportunities" element={<InvestmentOpportunities />} />  
                     <Route path="/investor/loanstatus" element={<LoanStatusInvestor />} />  
                     <Route path="/investor/profile" element={<ProfileInvestor />} />
                     <Route path="/investor/supportinv" element={<Supportinv />} />
 
                 </Routes>
+                <Chatbot/>
             </div>
         </Router>
     );

@@ -1,7 +1,7 @@
 // src/components/ApplyLoan.js
 import React, { useState } from 'react';
 import NavbarMSME from '../../components/NavbarMSME.js';
-import { verifyToken, createLoanApplication } from '../../services/ocenService.js';
+import { createLoanApplication } from '../../services/ocenService.js'; // Assuming this service handles API requests
 
 const ApplyLoan = () => {
     const [loanDetails, setLoanDetails] = useState({ amount: '', tenure: '', purpose: '' });
@@ -16,15 +16,11 @@ const ApplyLoan = () => {
         e.preventDefault();
         
         try {
-            const verifyResponse = await verifyToken(token);
-            if (verifyResponse.message === 'Token verified') {
-                const loanResponse = await createLoanApplication(loanDetails, token);
-                setMessage(loanResponse.message);
-            } else {
-                setMessage('Token verification failed');
-            }
+            // Assuming token verification is handled elsewhere
+            const loanResponse = await createLoanApplication({ ...loanDetails, token }); // Include token in the request
+            setMessage(loanResponse.message);
         } catch (error) {
-            setMessage(error.message);
+            setMessage(error.message || 'An error occurred while submitting the application.');
         }
     };
 

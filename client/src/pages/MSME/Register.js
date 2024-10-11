@@ -312,7 +312,7 @@ const Register = () => {
                 </form>
                 <p className="mt-4 text-sm">
                     {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-                    <button onClick={() => setIsSignUp(!isSignUp)} className="text-blue-500 hover:underline">
+                    <button onClick={() => setIsSignUp(!isSignUp)} className=" hover:underline">
                         {isSignUp ? 'Sign In' : 'Sign Up'}
                     </button>
                 </p>
