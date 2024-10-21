@@ -1,6 +1,5 @@
 // msmeRoutes.js
 import express from 'express';
-import Application from '../models/Application.js'; 
 import msmeController from '../controllers/msmeController.js'; 
 import Loan from '../models/Loan.js';
 import upload from '../middleware/upload.js';
@@ -45,6 +44,38 @@ router.get('/loan-requests', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch loan requests' });
     }
 });
+
+// routes/msmeRoutes.js
+router.get('/loan-status/:msmeId', async (req, res) => {
+    const { msmeId } = req.params;
+    try {
+        const loanRequests = await Loan.find({ msmeId }); // Fetch loans for the specific MSME
+        res.status(200).json(loanRequests);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch loan status' });
+    }
+});
+
+router.post('/loan-requests/:id/accept', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const loanRequest = await Loan.findByIdAndUpdate(id, { status: 'Accepted' }, { new: true });
+        res.status(200).json(loanRequest);
+    } catch (error) {
+        res.status(500).json({ error: 'Error accepting loan request' });
+    }
+});
+
+router.post('/loan-requests/:id/decline', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const loanRequest = await Loan.findByIdAndUpdate(id, { status: 'Declined' }, { new: true });
+        res.status(200).json(loanRequest);
+    } catch (error) {
+        res.status(500).json({ error: 'Error declining loan request' });
+    }
+});
+
 
 
 export default router;

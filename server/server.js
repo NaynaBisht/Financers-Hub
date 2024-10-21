@@ -2,10 +2,9 @@ import express from 'express';
 import { connect } from 'mongoose';
 import cors from 'cors';
 import { config } from 'dotenv';
-import msmeRoutes from './routes/msmeRoutes.js'; // Ensure this file exists
-import investorRoutes from './routes/investorRoutes.js'; // Ensure this file exists
-import loanRoutes from './routes/loanRoutes.js'; // ES6 syntax
-import Application from './models/Application.js'; // ES6 syntax
+import msmeRoutes from './routes/msmeRoutes.js'; 
+import investorRoutes from './routes/investorRoutes.js'; 
+import loanRoutes from './routes/loanRoutes.js'; 
 import { exec } from 'child_process';
 
 // Load environment variables
@@ -40,19 +39,6 @@ app.use('/api/investors', investorRoutes);
 
 // Use the loan routes
 app.use('/api', loanRoutes);
-
-// POST route for investors to apply for a loan
-app.post('/api/invest/apply', async (req, res) => {
-    const { loanId, investorId, terms } = req.body;
-    
-    try {
-        const newApplication = new Application({ loanId, investorId, terms });
-        await newApplication.save();
-        res.status(201).json({ message: 'Application submitted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error submitting application' });
-    }
-});
 
 // Root route for testing
 app.get('/', (req, res) => {
