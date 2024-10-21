@@ -3,6 +3,7 @@ import NavbarMSME from "../../components/NavbarMSME.js";
 import { Link } from "react-router-dom";
 
 const LandingMSME = () => {  
+    const msmeId = "1234";
     return (
         <div>
             <NavbarMSME />  
@@ -22,7 +23,7 @@ const LandingMSME = () => {
                     <Link to="/ApplyLoan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Apply for a Loan
                     </Link>
-                    <Link to="/LoanStatus" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to={`/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Loan Status
                     </Link>
                 </div>

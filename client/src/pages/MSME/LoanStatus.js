@@ -1,65 +1,48 @@
-import React, { useState } from 'react';
-import NavbarMSME from "../../components/NavbarMSME.js";
+// LoanStatus.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-// Sample loan data for demonstration purposes
-const loanData = [
-    {
-        id: 1,
-        loanType: "Business Expansion Loan",
-        amount: "₹5,00,000",
-        status: "Approved",
-        applicationDate: "2024-08-01",
-        disbursalDate: "2024-08-10"
-    },
-    {
-        id: 2,
-        loanType: "Equipment Financing",
-        amount: "₹2,00,000",
-        status: "Pending",
-        applicationDate: "2024-08-15",
-        disbursalDate: null
-    },
-    {
-        id: 3,
-        loanType: "Working Capital Loan",
-        amount: "₹3,00,000",
-        status: "Rejected",
-        applicationDate: "2024-08-20",
-        disbursalDate: null
-    }
-];
+const LoanStatus = ({ msmeId }) => {
+    const [loanRequests, setLoanRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-const LoanStatus = () => {
-    const [loans] = useState(loanData); // In real scenarios, fetch this data from an API
+    useEffect(() => {
+        const fetchLoanStatus = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/msmes/loan-status/${msmeId}`);
+                setLoanRequests(response.data);
+                setLoading(false);
+            } catch (error) {
+                setError('Failed to load loan status');
+                setLoading(false);
+            }
+        };
+
+        fetchLoanStatus();
+    }, [msmeId]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
-        <div>
-            <NavbarMSME />
-            <div className="container mx-auto p-8">
-                <h1 className="text-3xl font-bold text-[#2B1308] mb-6">Loan Status</h1>
-                <p className="mb-4 text-lg text-gray-700">
-                    Check the status of your loan applications below:
-                </p>
-                <div className="space-y-6">
-                    {loans.map((loan) => (
-                        <div key={loan.id} className="bg-gray-100 p-4 rounded-lg shadow-md">
-                            <h2 className="text-2xl font-semibold text-[#98473E]">{loan.loanType}</h2>
-                            <p className="mt-2 text-gray-600"><strong>Loan Amount:</strong> {loan.amount}</p>
-                            <p className="mt-2 text-gray-600"><strong>Status:</strong> {loan.status}</p>
-                            <p className="mt-2 text-gray-600"><strong>Application Date:</strong> {loan.applicationDate}</p>
-                            {loan.status === "Approved" && (
-                                <p className="mt-2 text-gray-600"><strong>Disbursal Date:</strong> {loan.disbursalDate}</p>
-                            )}
-                            {loan.status === "Pending" && (
-                                <p className="mt-2 text-gray-600">Your application is currently being processed.</p>
-                            )}
-                            {loan.status === "Rejected" && (
-                                <p className="mt-2 text-gray-600">Unfortunately, your application was rejected. Please contact support for more information.</p>
-                            )}
+        <div className="container mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-6">Loan Status</h1>
+            {loanRequests.length === 0 ? (
+                <p>No loan requests found for this MSME.</p>
+            ) : (
+                <div className="grid grid-cols-1 gap-6">
+                    {loanRequests.map((loan) => (
+                        <div key={loan._id} className="bg-white p-6 rounded-lg shadow-md">
+                            <h2 className="text-2xl font-bold mb-4">Loan Request ID: {loan._id}</h2>
+                            <p><strong>Amount Requested:</strong> {loan.amount}</p>
+                            <p><strong>Tenure:</strong> {loan.tenure} months</p>
+                            <p><strong>Purpose:</strong> {loan.purpose}</p>
+                            <p><strong>Status:</strong> {loan.status}</p>
                         </div>
                     ))}
                 </div>
-            </div>
+            )}
         </div>
     );
 };

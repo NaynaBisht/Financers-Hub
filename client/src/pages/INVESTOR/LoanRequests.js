@@ -24,11 +24,22 @@ const LoanRequests = () => {
         fetchLoanRequests();
     }, []);
 
+    const handleResponse = async (loanId, action) => {
+        try {
+            const response = await axios.post(`http://localhost:5000/api/msmes/loan-requests/${loanId}/${action}`);
+            if (response.status === 200) {
+                // Refresh loan requests
+                setLoanRequests(loanRequests.filter(loan => loan._id !== loanId));
+            }
+        } catch (error) {
+            console.error('Error updating loan request:', error);
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
     return (
-        
         <div>
             <NavbarINVESTOR />
             <div className="container mx-auto p-6">
@@ -44,12 +55,25 @@ const LoanRequests = () => {
                                 <p><strong>Tenure:</strong> {loan.tenure} months</p>
                                 <p><strong>Purpose:</strong> {loan.purpose}</p>
                                 <p><strong>Status:</strong> {loan.status}</p>
+                                <div className="flex space-x-4 mt-4">
+                                    <button 
+                                        onClick={() => handleResponse(loan._id, 'accept')} 
+                                        className="bg-green-500 text-white p-2 rounded"
+                                    >
+                                        Accept
+                                    </button>
+                                    <button 
+                                        onClick={() => handleResponse(loan._id, 'decline')} 
+                                        className="bg-red-500 text-white p-2 rounded"
+                                    >
+                                        Decline
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
-            
         </div>
     );
 };
