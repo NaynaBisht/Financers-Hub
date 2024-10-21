@@ -16,11 +16,10 @@ import Chatbot from "./components/Chatbot.js"
 // Import investor pages
 import LandingInvestor from "./pages/INVESTOR/LandingInvestor.js";
 import RegisterInvestor from './pages/INVESTOR/RegisterInvestor.js';
-import DashboardInvestor from './pages/INVESTOR/DashboardInvestor.js';
-import InvestmentOpportunities from './pages/INVESTOR/InvestmentOpportunities.js';
 import LoanStatusInvestor from './pages/INVESTOR/LoanStatusInvestor.js';
 import ProfileInvestor from './pages/INVESTOR/ProfileInvestor.js';
 import Supportinv from "./pages/INVESTOR/SupportINV.js";
+import LoanRequests from './pages/INVESTOR/LoanRequests.js';
 
 const App = () => {
     return (
@@ -43,13 +42,12 @@ const App = () => {
 
 
                    {/* INVESTOR Routes */}
-                    <Route path="/investor" element={<LandingInvestor />} /> 
-                    <Route path="/investor/register" element={<RegisterInvestor />} />  {/* Investor Registration */}
-                    <Route path="/investor/dashboardinvestor" element={<DashboardInvestor />} />  
-                    <Route path="/InvestmentOpportunities" element={<InvestmentOpportunities />} />  
-                    <Route path="/investor/loanstatus" element={<LoanStatusInvestor />} />  
-                    <Route path="/investor/profile" element={<ProfileInvestor />} />
-                    <Route path="/investor/supportinv" element={<Supportinv />} />
+                    <Route path="/LandingInvestor" element={<LandingInvestor />} /> 
+                    <Route path="/investor/register" element={<RegisterInvestor />} /> 
+                    <Route path="/loanstatus" element={<LoanStatusInvestor />} />  
+                    <Route path="/ProfileInvestor" element={<ProfileInvestor />} />
+                    <Route path="/supportinv" element={<Supportinv />} />
+                    <Route path="/LoanRequests" element={<LoanRequests />} />
 
                 </Routes>
                 <Chatbot/>
