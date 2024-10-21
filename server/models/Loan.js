@@ -1,22 +1,12 @@
 import mongoose from 'mongoose';
 
-const loanSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
-        required: true, // Make amount required
-    },
-    investorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Investor',
-        required: true, // Make investorId required
-    },
-    status: {
-        type: String,
-        enum: ['pending', 'approved', 'rejected'], // Define possible statuses
-        default: 'pending', // Default status
-    },
-});
+const LoanSchema = new mongoose.Schema({
+    amount: { type: Number, required: true },
+    tenure: { type: Number, required: true },
+    purpose: { type: String, required: true },
+    msmeId: { type: String, required: true },
+    status: { type: String, default: 'Pending' },
+}, { timestamps: true });
 
-// Exporting the Loan model
-const Loan = mongoose.model('Loan', loanSchema);
+const Loan = mongoose.model('Loan', LoanSchema);
 export default Loan;

@@ -1,18 +1,28 @@
-const express = require('express');
-const router = express.Router();
-const Loan = require('../models/Loan'); // Adjust the path as necessary
+// routes/msmeRoutes.js
+import express from 'express';
+import Loan from '../models/Loan.js';
 
-// GET /loans
-router.get('/loans', async (req, res) => {
+const router = express.Router();
+
+
+// POST route for MSMEs to submit loan requests
+router.post('/apply-loan', async (req, res) => {
+    const { amount, tenure, purpose, msmeId } = req.body;
     try {
-        const loans = await Loan.find();
-        console.log('Fetched loans:', loans); // Log fetched loans
-        res.status(200).json(loans);
+        const newLoan = new Loan({ amount, tenure, purpose, msmeId, status: 'Pending' });
+        await newLoan.save();
+        res.status(200).json({ message: 'Loan application submitted successfully' });
     } catch (error) {
-        console.error('Error fetching loans:', error); // Log error
-        res.status(500).json({ message: 'Failed to fetch loans', error: error.message });
+        res.status(500).json({ error: 'Failed to apply for loan' });
     }
 });
 
-// Export the router to use it in your server file
-module.exports = router;
+router.get('/investor-dashboard', async (req, res) => {
+    try {
+        const loanRequests = await Loan.find(); // Fetch all loan requests
+        res.status(200).json(loanRequests);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch loan requests' });
+    }
+});
+export default router; // Use ES6 export

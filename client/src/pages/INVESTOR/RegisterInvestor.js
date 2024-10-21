@@ -100,7 +100,7 @@ const RegisterInvestor = () => {
                     password: formData.password,
                 });
                 console.log('Sign In Response:', response.data);
-                navigate('/investor/dashboardinvestor', { replace: true }); // Redirect to the landing page
+                navigate('/LandingInvestor', { replace: true }); // Redirect to the landing page
             }
         } catch (error) {
             console.error('Error during API call:', error.response ? error.response.data : error.message);
@@ -112,7 +112,10 @@ const RegisterInvestor = () => {
         <div>
             <Navbar />
             <div className="flex flex-col items-center justify-center">
-                <h1 className="text-3xl font-bold mb-5 mt-4 bg-[#C25D39] w-[20%] text-center text-white p-3 rounded-lg border">{isSignUp ? 'Sign Up' : 'Sign In'}</h1>            
+                <h1 className="text-3xl font-bold mb-5 mt-4 bg-[#C25D39] w-[40%] text-center text-white p-3 rounded-lg border">{isSignUp ? 'Sign Up As Investor' : 'Sign In As Investor'}</h1> 
+
+                {error && <div className="text-red-500">{error}</div>}
+
                 <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md w-full max-w-2xl">
                     {isSignUp ? (
                         <>
@@ -349,7 +352,7 @@ const RegisterInvestor = () => {
                         {isSignUp ? 'Sign Up' : 'Sign In'}
                     </button>
                 </form>
-                <p className="mt-4 text-sm">
+                <p className="mt-4 text-sm mb-8">
                     {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
                     <button onClick={() => setIsSignUp(!isSignUp)} className=" hover:underline">
                         {isSignUp ? 'Sign In' : 'Sign Up'}

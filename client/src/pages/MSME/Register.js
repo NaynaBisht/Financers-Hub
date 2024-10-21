@@ -57,7 +57,7 @@ const Register = () => {
                 Object.keys(formData).forEach(key => {
                     formDataToSend.append(key, formData[key]);
                 });
-
+    
                 const response = await axios.post('http://localhost:5000/api/msmes/register', formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
@@ -65,7 +65,8 @@ const Register = () => {
                 });
                 console.log('Sign Up Response:', response.data);
                 setError(null); // Reset error on success
-                setFormData({ // Reset the form data
+                // Reset form data
+                setFormData({
                     companyName: '',
                     industryType: '',
                     location: '',
@@ -92,17 +93,31 @@ const Register = () => {
                 navigate('/msme'); // Redirect to the landing page
             }
         } catch (error) {
-            console.error('Error during API call:', error.response ? error.response.data : error.message);
-            setError(error.response ? error.response.data.message : 'An unexpected error occurred');
+            // Improved error handling
+            console.error('Error during API call:', error);
+            if (error.response) {
+                // Server responded with a status other than 200
+                setError(error.response.data.message || 'Something went wrong. Please try again.');
+            } else if (error.request) {
+                // No response received
+                setError('No response from server. Please check your connection.');
+            } else {
+                // Error setting up the request
+                setError('Error: ' + error.message);
+            }
         }
     };
+    
     
 
     return (
         <div>
             <Navbar />
             <div className="flex flex-col items-center justify-center">
-                <h1 className="text-3xl font-bold mb-5 mt-4 bg-[#C25D39] w-[20%] text-center text-white p-3 rounded-lg border">{isSignUp ? 'Sign Up' : 'Sign In'}</h1>
+                <h1 className="text-3xl font-bold mb-5 mt-4 bg-[#C25D39] w-[40%] text-center text-white p-3 rounded-lg border">{isSignUp ? 'Sign Up  As MSME' : 'Sign In As MSME'}</h1>
+
+                {error && <div className="text-red-500">{error}</div>}
+
                 <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md w-full max-w-2xl">
                     {isSignUp ? (
                         <>
@@ -310,7 +325,7 @@ const Register = () => {
                         {isSignUp ? 'Sign Up' : 'Sign In'}
                     </button>
                 </form>
-                <p className="mt-4 text-sm">
+                <p className="mt-4 text-sm mb-8">
                     {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
                     <button onClick={() => setIsSignUp(!isSignUp)} className=" hover:underline">
                         {isSignUp ? 'Sign In' : 'Sign Up'}
