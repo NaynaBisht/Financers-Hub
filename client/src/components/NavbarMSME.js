@@ -29,11 +29,11 @@ const NavbarMSME = () => {
         <ul className={`hidden md:flex space-x-7 text-white`}>
           <li><Link to="/msme">Home</Link></li>
           {/* <li><Link to="/ApplyLoan">Apply for Loan</Link></li> */}
-          <li><Link to="/Dashboard">Dashboard</Link></li>
-          <li><Link to="/FinancialLiteracy">Financial Literacy</Link></li>
-          <li><Link to="/GovSchemes">Government Schemes</Link></li>
-          <li><Link to="/Support">Support</Link></li>
-          <li><Link to="/Profile">Profile</Link></li>
+          <li><Link to="/msme/dashboard">Dashboard</Link></li>
+          <li><Link to="/msme/financial-literacy">Financial Literacy</Link></li>
+          <li><Link to="/msme/gov-schemes">Government Schemes</Link></li>
+          <li><Link to="/msme/support">Support</Link></li>
+          <li><Link to="/msme/profile">Profile</Link></li>
         </ul>
 
         <div className="hidden md:block">
