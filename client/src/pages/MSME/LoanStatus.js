@@ -22,7 +22,7 @@ const LoanStatus = () => {
         }
 
         const response = await axios.get(
-          `http://localhost:5000/api/msmes/all-loans/${msmeId}`,
+          `https://financers-hub.vercel.app//api/msmes/all-loans/${msmeId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

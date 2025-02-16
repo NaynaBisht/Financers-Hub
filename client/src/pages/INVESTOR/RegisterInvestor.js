@@ -65,7 +65,7 @@ const RegisterInvestor = () => {
                     formDataToSend.append(key, formData[key]);
                 });
 
-                const response = await axios.post('http://localhost:5000/api/investors/register', formDataToSend, {
+                const response = await axios.post('https://financers-hub.vercel.app//api/investors/register', formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -95,12 +95,12 @@ const RegisterInvestor = () => {
                 setFormData({ ...formData, email: response.data.email }); // Preserve the email    
             } else {
                 // Handle Sign In logic
-                const response = await axios.post('http://localhost:5000/api/investors/login', {
+                const response = await axios.post('https://financers-hub.vercel.app//api/investors/login', {
                     email: formData.email,
                     password: formData.password,
                 });
                 console.log('Sign In Response:', response.data);
-                
+
                 const { token, investorId } = response.data;
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('investorId', investorId);

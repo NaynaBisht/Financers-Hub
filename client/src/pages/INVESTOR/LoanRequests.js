@@ -19,7 +19,7 @@ const LoanRequests = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:5000/api/investors/loan-requests', {
+                const response = await axios.get('https://financers-hub.vercel.app//api/investors/loan-requests', {
                     headers: { Authorization: `Bearer ${token}` }  
                 });
 
@@ -49,7 +49,7 @@ const LoanRequests = () => {
             }
     
             await axios.put(
-                `http://localhost:5000/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
+                `https://financers-hub.vercel.app//api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
                 { investorId }, // Sending investorId in the request body
                 { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
             );
