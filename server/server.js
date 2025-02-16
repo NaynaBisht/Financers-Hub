@@ -21,7 +21,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // Middleware
 app.use(express.json()); // JSON Parser
 app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
-app.use(cors({ origin: 'https://financers-hub.vercel.app/', credentials: true })); // CORS
+app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // CORS
 
 // Database Connection
 const connectDB = async () => {
