@@ -100,7 +100,11 @@ const RegisterInvestor = () => {
                     password: formData.password,
                 });
                 console.log('Sign In Response:', response.data);
-                navigate('/LandingInvestor', { replace: true }); // Redirect to the landing page
+                
+                const { token, investorId } = response.data;
+                localStorage.setItem('authToken', token);
+                localStorage.setItem('investorId', investorId);
+                navigate('/investor', { replace: true }); 
             }
         } catch (error) {
             console.error('Error during API call:', error.response ? error.response.data : error.message);

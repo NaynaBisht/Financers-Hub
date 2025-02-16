@@ -40,7 +40,7 @@ const LandingInvestor = () => {
                             <h1 className="text-3xl font-bold text-black mb-4">Empowering Banks to Support MSMEs</h1>
                             <p className="text-lg mb-4">FinancersHub provides a platform for banks to evaluate and manage loans, credit score reports, and investment decisions related to MSMEs.</p>
                             <div className="flex space-x-4">
-                                <a href="/LoanRequests" className="bg-[#8B1308] bg-opacity-90 text-white p-4 rounded-lg shadow-lg">
+                                <a href="/investor/loan-requests" className="bg-[#8B1308] bg-opacity-90 text-white p-4 rounded-lg shadow-lg">
                                     <h2 className="text-2xl">Loan Requests</h2>
                                     <p className="mt-2">Review MSME loan requests and approve or decline based on financial data.</p>
                                 </a>

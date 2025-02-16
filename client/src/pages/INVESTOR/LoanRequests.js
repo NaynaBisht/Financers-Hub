@@ -11,30 +11,57 @@ const LoanRequests = () => {
     useEffect(() => {
         const fetchLoanRequests = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/msmes/loan-requests'); 
+                const token = localStorage.getItem('token');  // Retrieve token from localStorage
 
-                setLoanRequests(response.data);
+                if (!token) {
+                    setError('Unauthorized: No token found');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await axios.get('http://localhost:5000/api/investors/loan-requests', {
+                    headers: { Authorization: `Bearer ${token}` }  
+                });
+
+                if (Array.isArray(response.data.data)) {
+                    setLoanRequests(response.data.data);
+                } else {
+                    setLoanRequests([]);
+                }
                 setLoading(false);
+
             } catch (error) {
                 setError('Failed to load loan requests');
                 setLoading(false);
             }
         };
-
         fetchLoanRequests();
     }, []);
 
-    const handleResponse = async (loanId, action) => {
+    const handleLoanDecision = async (loanId, decision) => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/msmes/loan-requests/${loanId}/${action}`);
-            if (response.status === 200) {
-                // Refresh loan requests
-                setLoanRequests(loanRequests.filter(loan => loan._id !== loanId));
+            const investorId = localStorage.getItem('investorId'); // Retrieve investor ID
+            const token = localStorage.getItem('token'); // Retrieve token
+    
+            if (!token || !investorId) {
+                alert("Unauthorized: Missing token or investor ID");
+                return;
             }
-        } catch (error) {
-            console.error('Error updating loan request:', error);
+    
+            await axios.put(
+                `http://localhost:5000/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
+                { investorId }, // Sending investorId in the request body
+                { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
+            );
+    
+            setLoanRequests(loanRequests.filter((loan) => loan._id !== loanId));
+            alert(`Loan ${decision}ed successfully`);
+        } catch (err) {
+            console.error("Error processing loan decision:", err);
+            alert("Error processing loan decision");
         }
     };
+    
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -50,20 +77,20 @@ const LoanRequests = () => {
                     <div className="grid grid-cols-1 gap-6">
                         {loanRequests.map((loan) => (
                             <div key={loan._id} className="bg-white p-6 rounded-lg shadow-md">
-                                <h2 className="text-2xl font-bold mb-4">Loan Request from MSME ID: {loan.msmeId}</h2>
+                                <h2 className="text-2xl font-bold mb-4">Loan Request from MSME ID: {loan.msmeId} </h2>
                                 <p><strong>Amount Requested:</strong> {loan.amount}</p>
                                 <p><strong>Tenure:</strong> {loan.tenure} months</p>
                                 <p><strong>Purpose:</strong> {loan.purpose}</p>
                                 <p><strong>Status:</strong> {loan.status}</p>
                                 <div className="flex space-x-4 mt-4">
                                     <button 
-                                        onClick={() => handleResponse(loan._id, 'accept')} 
+                                        onClick={() => handleLoanDecision(loan._id, 'accept')} 
                                         className="bg-green-500 text-white p-2 rounded"
                                     >
                                         Accept
                                     </button>
                                     <button 
-                                        onClick={() => handleResponse(loan._id, 'decline')} 
+                                        onClick={() => handleLoanDecision(loan._id, 'decline')} 
                                         className="bg-red-500 text-white p-2 rounded"
                                     >
                                         Decline

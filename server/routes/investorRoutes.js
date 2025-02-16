@@ -2,7 +2,8 @@
 // routes/investorRoutes.js
 import { Router } from 'express';
 import uploadInv from '../middleware/uploadInv.js'; // Correct path for the middleware
-import { registerInvestor, loginInvestor } from '../controllers/investorController.js';
+import { registerInvestor, loginInvestor, getLoanRequests, declineLoanRequest, acceptLoanRequest } from '../controllers/investorController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -18,6 +19,11 @@ router.post(
 
 // Login route (no file uploads)
 router.post('/login', loginInvestor); // Use loginInvestor directly
+
+router.get('/loan-requests', authMiddleware, getLoanRequests);
+
+router.put('/accept-loan/:loanId', authMiddleware, acceptLoanRequest);
+router.put('/decline-loan/:loanId', authMiddleware, declineLoanRequest);
 
 export default router;
 
