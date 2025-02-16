@@ -1,73 +1,81 @@
 import express from 'express';
-import { connect } from 'mongoose';
+import mongoose from 'mongoose';
 import cors from 'cors';
-import { config } from 'dotenv';
-import msmeRoutes from './routes/msmeRoutes.js'; 
-import investorRoutes from './routes/investorRoutes.js'; 
-import loanRoutes from './routes/loanRoutes.js'; 
-import { exec } from 'child_process';
+import dotenv from 'dotenv';
+import { spawn } from 'child_process';
+
+// Import Routes
+import msmeRoutes from './routes/msmeRoutes.js';
+import investorRoutes from './routes/investorRoutes.js';
 
 // Load environment variables
-config();
+dotenv.config();
 
+
+
+// Initialize Express
 const app = express();
 const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
-// CORS configuration
-app.use(cors({
-    origin: 'http://localhost:3000', // Update this to your frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-}));
+// Middleware
+app.use(express.json()); // JSON Parser
+app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
+app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // CORS
 
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies
+// Database Connection
+const connectDB = async () => {
+    try {
+        if (!MONGO_URI) throw new Error('MONGO_URI is not defined in environment variables.');
+        await mongoose.connect(MONGO_URI);
+        console.log('MongoDB Connected');
+    } catch (err) {
+        console.error(' MongoDB Connection Error:', err.message);
+        process.exit(1); // Exit process on failure
+    }
+};
+connectDB();
 
-// MongoDB connection
-connect(process.env.MONGO_URI)
-.then(() => {
-    console.log('MongoDB connected');
-})
-.catch((err) => {
-    console.error('MongoDB connection error:', err);
-});
-
-// Use the routes for MSME and Investor APIs
+// Routes
 app.use('/api/msmes', msmeRoutes);
 app.use('/api/investors', investorRoutes);
 
-
-// Use the loan routes
-app.use('/api', loanRoutes);
-
-// Root route for testing
+// Root Route
 app.get('/', (req, res) => {
-    res.send('API is running...');
+    res.json({ success: true, message: 'API is running...' });
 });
 
-// Chatbot route
+// Chatbot Route
 app.post('/api/chatbot', (req, res) => {
     const userInput = req.body.input;
+    if (!userInput) {
+        return res.status(400).json({ success: false, message: 'User input is required' });
+    }
 
-    // Execute the Python script with the input data
-    exec(`python3 utils/implement.py ${userInput}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error('Error running Python script:', error);
-            return res.status(500).send('Error running the chatbot model');
+    const pythonProcess = spawn('python3', ['utils/implement.py', userInput]);
+
+    let output = '';
+    pythonProcess.stdout.on('data', (data) => {
+        output += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Chatbot Error: ${data.toString()}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+        if (code !== 0) {
+            return res.status(500).json({ success: false, message: 'Chatbot execution failed' });
         }
-
-        // Send back the result from the Python script to the frontend
-        res.json({ result: stdout.trim() });
+        res.json({ success: true, result: output.trim() });
     });
 });
 
-// Error handling middleware
+// Global Error Handler
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+    console.error('🚨 Server Error:', err.stack);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Start Server
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
