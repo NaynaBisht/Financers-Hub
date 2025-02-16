@@ -54,57 +54,44 @@ const Register = () => {
             if (isSignUp) {
                 // Handle Sign Up logic
                 const formDataToSend = new FormData();
-                Object.keys(formData).forEach(key => {
+                Object.keys(formData).forEach((key) => {
                     formDataToSend.append(key, formData[key]);
                 });
     
-                const response = await axios.post('http://localhost:5000/api/msmes/register', formDataToSend, {
+                const response = await axios.post("http://localhost:5000/api/msmes/register", formDataToSend, {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
+                        "Content-Type": "multipart/form-data",
                     },
                 });
-                console.log('Sign Up Response:', response.data);
+    
+                console.log("Sign Up Response:", response.data);
                 setError(null); // Reset error on success
-                // Reset form data
-                setFormData({
-                    companyName: '',
-                    industryType: '',
-                    location: '',
-                    phone: '',
-                    email: '',
-                    password: '',
-                    annualRevenue: '',
-                    profitAndLoss: null,
-                    balanceSheet: null,
-                    assetsAndLiabilities: null,
-                    taxReturn: null,
-                    businessRegDoc: null,
-                    collateralDocs: null,
-                    termsAccepted: false,
-                });
+    
+                if (response.data.msmeId && response.data.token) {
+                    localStorage.setItem("msmeId", response.data.msmeId);
+                    localStorage.setItem("token", response.data.token); // Store token
+                }
+    
                 setIsSignUp(false); // Switch to Sign In state
             } else {
                 // Handle Sign In logic
-                const response = await axios.post('http://localhost:5000/api/msmes/login', {
+                const response = await axios.post("http://localhost:5000/api/msmes/login", {
                     email: formData.email,
                     password: formData.password,
                 });
-                console.log('Sign In Response:', response.data);
-                navigate('/msme'); // Redirect to the landing page
+    
+                console.log("Sign In Response:", response.data);
+    
+                if (response.data.msmeId && response.data.token) {
+                    localStorage.setItem("msmeId", response.data.msmeId);
+                    localStorage.setItem("token", response.data.token); // Store token
+                }
+    
+                navigate("/msme"); // Redirect to the landing page
             }
         } catch (error) {
-            // Improved error handling
-            console.error('Error during API call:', error);
-            if (error.response) {
-                // Server responded with a status other than 200
-                setError(error.response.data.message || 'Something went wrong. Please try again.');
-            } else if (error.request) {
-                // No response received
-                setError('No response from server. Please check your connection.');
-            } else {
-                // Error setting up the request
-                setError('Error: ' + error.message);
-            }
+            console.error("Error during API call:", error);
+            setError(error.response?.data?.message || "Something went wrong. Please try again.");
         }
     };
     

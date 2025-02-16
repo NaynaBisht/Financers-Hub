@@ -1,121 +1,96 @@
-import User from '../models/User.js';
-import bcrypt from 'bcryptjs';  // Import bcrypt for password hashing
+// controllers/msmeController.js
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import Msme from '../models/Msme.js';
+import Loan from '../models/Loan.js';
 
-// Register new user with file uploads
-const register = async (req, res) => {
+// Register MSME
+export const register = async (req, res) => {
     const { companyName, industryType, location, phone, email, password, annualRevenue } = req.body;
-
-    // Destructure the uploaded files, ensuring each file field is optional
-    const profitAndLoss = req.files.profitAndLoss ? req.files.profitAndLoss[0].filename : null;
-    const balanceSheet = req.files.balanceSheet ? req.files.balanceSheet[0].filename : null;
-    const assetsAndLiabilities = req.files.assetsAndLiabilities ? req.files.assetsAndLiabilities[0].filename : null;
-    const taxReturn = req.files.taxReturn ? req.files.taxReturn[0].filename : null;
-    const businessRegDoc = req.files.businessRegDoc ? req.files.businessRegDoc[0].filename : null;
-    const collateralDocs = req.files.collateralDocs ? req.files.collateralDocs[0].filename : null;
-
     try {
-        // Check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists!' });
-        }
+        const existingUser = await Msme.findOne({ email });
+        if (existingUser) return res.status(400).json({ message: 'User already exists!' });
 
-        // Hash the password using bcrypt
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Create paths to save the files (Assuming you want to save in a public directory)
-        const profitAndLossPath = profitAndLoss ? `/uploads/${profitAndLoss}` : null;
-        const balanceSheetPath = balanceSheet ? `/uploads/${balanceSheet}` : null;
-        const assetsAndLiabilitiesPath = assetsAndLiabilities ? `/uploads/${assetsAndLiabilities}` : null;
-        const taxReturnPath = taxReturn ? `/uploads/${taxReturn}` : null;
-        const businessRegDocPath = businessRegDoc ? `/uploads/${businessRegDoc}` : null;
-        const collateralDocsPath = collateralDocs ? `/uploads/${collateralDocs}` : null;
+        const documents = {
+            profitAndLoss: req.files?.profitAndLoss?.[0]?.filename || null,
+            balanceSheet: req.files?.balanceSheet?.[0]?.filename || null,
+            assetsAndLiabilities: req.files?.assetsAndLiabilities?.[0]?.filename || null,
+            taxReturn: req.files?.taxReturn?.[0]?.filename || null,
+            businessRegDoc: req.files?.businessRegDoc?.[0]?.filename || null,
+            collateralDocs: req.files?.collateralDocs?.[0]?.filename || null,
+        };
 
-        // Create new user with hashed password
-        const newUser = new User({
-            companyName,
-            industryType,
-            location,
-            phone,
-            email,
-            password: hashedPassword, // Store hashed password
-            annualRevenue,
-            documents: {
-                profitAndLoss: profitAndLossPath,
-                balanceSheet: balanceSheetPath,
-                assetsAndLiabilities: assetsAndLiabilitiesPath,
-                taxReturn: taxReturnPath,
-                businessRegDoc: businessRegDocPath,
-                collateralDocs: collateralDocsPath,
-            },
-        });
+        const newUser = new Msme({ companyName, industryType, location, phone, email, password: hashedPassword, annualRevenue, documents });
+        await newUser.save();
 
-        // Save user
-        const savedUser = await newUser.save();
-
-        // Return the new user's ID
-        res.status(201).json({ message: 'User registered successfully!', userId: savedUser._id });
+        res.status(201).json({ message: 'User registered successfully!', msmeId: newUser._id });
     } catch (error) {
-        console.error('Registration error:', error); 
+        console.error('Registration error:', error);
         res.status(500).json({ error: 'User registration failed!' });
     }
 };
 
-// Login user
-const login = async (req, res) => {
-    const { email, password } = req.body;
-
+// Login MSME
+export const login = async (req, res) => {
     try {
-        // Find user by email
-        const user = await User.findOne({ email });
-        console.log('User fetched from database:', user);
+        const { email, password } = req.body;
+        if (!email || !password) return res.status(400).json({ success: false, message: 'Email and password are required' });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found!' });
-        }
+        const msmeUser = await Msme.findOne({ email });
+        if (!msmeUser) return res.status(404).json({ success: false, message: 'MSME not found' });
 
-        // Compare the entered password with the stored hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password comparison result:', isMatch);
+        const isMatch = await bcrypt.compare(password, msmeUser.password);
+        if (!isMatch) return res.status(400).json({ success: false, message: 'Invalid credentials' });
 
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials!' });
-        }
+        const token = jwt.sign({ id: msmeUser._id, role: "msme" }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-        // Return success response with the user ID
-        res.status(200).json({ message: 'Login successful!', userId: user._id });
+        res.json({ success: true, token, msmeId: msmeUser._id });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Login failed!' });
+        console.error("Login error:", error.message);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-const getUserProfile = async (req, res) => {
-    const { userId } = req.params;
-
+// Get MSME ID
+export const getMsmeId = async (req, res) => {
     try {
-        const user = await User.findById(userId);
+        const { userId } = req.query;
+        if (!userId) return res.status(400).json({ success: false, message: "User ID is required" });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found!' });
-        }
+        const msme = await Msme.findOne({ userId });
+        if (!msme) return res.status(404).json({ success: false, message: "MSME ID not found" });
 
-        // Send user data back to the frontend (exclude password)
-        res.status(200).json({
-            companyName: user.companyName,
-            industryType: user.industryType,
-            location: user.location,
-            phone: user.phone,
-            email: user.email,
-            annualRevenue: user.annualRevenue,
-            documents: user.documents,
-        });
+        res.json({ success: true, msmeId: msme._id });
     } catch (error) {
-        console.error('Error fetching user profile:', error);
-        res.status(500).json({ error: 'Failed to fetch user profile!' });
+        res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
 };
 
+// Apply for Loan
+export const applyLoan = async (req, res) => {
+    try {
+        const { amount, tenure, purpose, msmeId } = req.body;
+        if (!amount || !tenure || !purpose || !msmeId) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
 
-export default { register, login, getUserProfile };
+        const newLoan = new Loan({ amount, tenure, purpose, status: 'Pending', msmeId });
+        await newLoan.save();
+        res.status(201).json({ success: true, message: "Loan application submitted", data: newLoan });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    }
+};
+
+// Get User Loans
+export const getUserLoans = async (req, res) => {
+    try {
+        const loans = await Loan.find({ msmeId: req.params.msmeId });
+        res.json({ success: true, message: "User loans fetched", data: loans });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    }
+};

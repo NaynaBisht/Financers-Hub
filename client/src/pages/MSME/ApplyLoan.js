@@ -1,10 +1,19 @@
 // ApplyLoan.js
 import React, { useState } from 'react';
 import NavbarMSME from '../../components/NavbarMSME.js';
+import { useEffect } from 'react';
+
 
 const ApplyLoan = () => {
-    const [loanDetails, setLoanDetails] = useState({ amount: '', tenure: '', purpose: '', msmeId: '12345' }); // Example msmeId
+    const [loanDetails, setLoanDetails] = useState({ amount: '', tenure: '', purpose: '', msmeId: '' });
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        const storedMsmeId = localStorage.getItem("msmeId"); // Get from localStorage
+        if (storedMsmeId) {
+            setLoanDetails(prev => ({ ...prev, msmeId: storedMsmeId })); // Set MSME ID dynamically
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         setLoanDetails({ ...loanDetails, [e.target.name]: e.target.value });
@@ -13,24 +22,55 @@ const ApplyLoan = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/msmes/apply-loan', {
+            const token = localStorage.getItem("token"); // Retrieve the authentication token
+            const storedMsmeId = localStorage.getItem("msmeId");
+    
+            if (!token) {
+                setMessage("Unauthorized: Please log in again.");
+                return;
+            }
+    
+            if (!storedMsmeId) {
+                setMessage("MSME ID is missing. Please refresh and try again.");
+                return;
+            }
+    
+            const requestBody = {
+                amount: Number(loanDetails.amount), // Convert to number
+                tenure: Number(loanDetails.tenure),
+                purpose: loanDetails.purpose.trim(), // Trim spaces
+                msmeId: storedMsmeId // Set MSME ID
+            };
+    
+            // Validate fields before sending request
+            if (!requestBody.amount || !requestBody.tenure || !requestBody.purpose) {
+                setMessage("All fields are required!");
+                return;
+            }
+    
+            const response = await fetch('http://localhost:5000/api/msmes/apply', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(loanDetails),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Ensure token is sent
+                },
+                body: JSON.stringify(requestBody), // Send the correctly formatted request body
             });
-
+    
             const result = await response.json();
-
+    
             if (response.ok) {
                 setMessage('Loan application submitted successfully!');
-                setLoanDetails({ amount: '', tenure: '', purpose: '', msmeId: '12345' });
+                setLoanDetails({ amount: '', tenure: '', purpose: '', msmeId: storedMsmeId });
             } else {
-                setMessage(result.error || 'Error submitting loan application.');
+                setMessage(result.message || 'Error submitting loan application.');
             }
         } catch (error) {
             setMessage('An error occurred. Please try again.');
         }
     };
+    
+    
 
     return (
         <div>

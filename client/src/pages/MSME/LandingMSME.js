@@ -1,9 +1,45 @@
 import React from "react";
 import NavbarMSME from "../../components/NavbarMSME.js";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const LandingMSME = () => {  
-    const msmeId = "1234";
+
+    const [msmeId, setMsmeId] = useState(null);
+
+    useEffect(() => {
+        const storedId = localStorage.getItem("msmeId");  // Try fetching from localStorage
+        if (storedId) {
+            setMsmeId(storedId);
+        } else {
+            console.error("MSME ID not found");
+        }
+    }, []);
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchMSMEId = async () => {
+            try {
+                const response = await axios.get("/api/msmes/msme-id");
+                setMsmeId(response.data.msmeId);
+            } catch (error) {
+                console.error("Error fetching MSME ID:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMSMEId();
+    }, []);
+
+    if (loading) return <p>Loading...</p>;
+    if (!msmeId) return <p>Error: MSME ID not found</p>;
+
+    console.log("MSME ID:", msmeId);
+
+
     return (
         <div>
             <NavbarMSME />  
@@ -20,10 +56,10 @@ const LandingMSME = () => {
 
                 {/* Call to Action Buttons */}
                 <div className="mt-4 gap-5 flex flex-col md:flex-row justify-center">
-                    <Link to="/ApplyLoan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to="/msme/apply-loan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Apply for a Loan
                     </Link>
-                    <Link to={`/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to={`/msme/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Loan Status
                     </Link>
                 </div>
