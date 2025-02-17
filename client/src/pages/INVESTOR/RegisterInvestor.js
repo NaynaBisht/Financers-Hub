@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar.js';
 import axios from 'axios'; 
 
 const RegisterInvestor = () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const [isSignUp, setIsSignUp] = useState(true);
 
     const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ const RegisterInvestor = () => {
                     formDataToSend.append(key, formData[key]);
                 });
 
-                const response = await axios.post('https://financers-hub.vercel.app//api/investors/register', formDataToSend, {
+                const response = await axios.post(`${backendUrl}/api/investors/register`, formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -95,7 +96,7 @@ const RegisterInvestor = () => {
                 setFormData({ ...formData, email: response.data.email }); // Preserve the email    
             } else {
                 // Handle Sign In logic
-                const response = await axios.post('https://financers-hub.vercel.app//api/investors/login', {
+                const response = await axios.post(`${backendUrl}/api/investors/login`, {
                     email: formData.email,
                     password: formData.password,
                 });

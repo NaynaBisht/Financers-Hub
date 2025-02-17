@@ -4,6 +4,8 @@ import Navbar from '../../components/Navbar.js';
 import axios from 'axios'; 
 
 const Register = () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
     const [isSignUp, setIsSignUp] = useState(true);
     const [formData, setFormData] = useState({
         companyName: '',
@@ -58,7 +60,7 @@ const Register = () => {
                     formDataToSend.append(key, formData[key]);
                 });
     
-                const response = await axios.post("https://financers-hub.vercel.app//api/msmes/register", formDataToSend, {
+                const response = await axios.post(`${backendUrl}/api/msmes/register`, formDataToSend, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -75,7 +77,7 @@ const Register = () => {
                 setIsSignUp(false); // Switch to Sign In state
             } else {
                 // Handle Sign In logic
-                const response = await axios.post("https://financers-hub.vercel.app//api/msmes/login", {
+                const response = await axios.post(`${backendUrl}/api/msmes/login`, {
                     email: formData.email,
                     password: formData.password,
                 });

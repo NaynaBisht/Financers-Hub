@@ -4,6 +4,8 @@ import axios from 'axios';
 import NavbarINVESTOR from '../../components/NavbarINVESTOR.js';
 
 const LoanRequests = () => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
     const [loanRequests, setLoanRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +21,7 @@ const LoanRequests = () => {
                     return;
                 }
 
-                const response = await axios.get('https://financers-hub.vercel.app//api/investors/loan-requests', {
+                const response = await axios.get(`${backendUrl}/api/investors/loan-requests`, {
                     headers: { Authorization: `Bearer ${token}` }  
                 });
 
@@ -49,7 +51,7 @@ const LoanRequests = () => {
             }
     
             await axios.put(
-                `https://financers-hub.vercel.app//api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
+                `${backendUrl}/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
                 { investorId }, // Sending investorId in the request body
                 { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
             );
