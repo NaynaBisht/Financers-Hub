@@ -22,7 +22,25 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 // Middleware
 app.use(express.json()); // JSON Parser
 app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));// CORS
+
+
+// Allow multiple origins dynamically
+const allowedOrigins = [
+    'https://financers-hub.vercel.app',
+    'https://financers-gu3gi6vir-naynabisht1s-projects.vercel.app', // Add your other frontend origin here
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+}));
+
 
 // Database Connection
 const connectDB = async () => {
