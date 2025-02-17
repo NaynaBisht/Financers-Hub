@@ -22,6 +22,7 @@ app.use(express.json()); // JSON Parser
 app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
 app.use(cookieParser());
 
+const cors = require('cors');
 const corsOptions = {
     origin:'https://financers-hub.vercel.app/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
