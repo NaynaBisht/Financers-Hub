@@ -6,8 +6,6 @@ import { useEffect } from 'react';
 
 const ApplyLoan = () => {
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
     const [loanDetails, setLoanDetails] = useState({ amount: '', tenure: '', purpose: '', msmeId: '' });
     const [message, setMessage] = useState('');
 
@@ -51,7 +49,7 @@ const ApplyLoan = () => {
                 return;
             }
     
-            const response = await fetch(`${backendUrl}/api/msmes/apply`, {
+            const response = await fetch("https://financers-hub.onrender.com/api/msmes/apply", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import NavbarMSME from "../../components/NavbarMSME.js";
 
 const LoanStatus = () => {
-  const backendUrl = process.env.REACT_APP_BACKEND_URL;
   const { msmeId } = useParams();
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +22,7 @@ const LoanStatus = () => {
         }
 
         const response = await axios.get(
-          `${backendUrl}/api/msmes/all-loans/${msmeId}`,
+          "https://financers-hub.onrender.com/api/msmes/all-loans/${msmeId}",
           {
             headers: {
               Authorization: `Bearer ${token}`,

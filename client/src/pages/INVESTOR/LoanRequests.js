@@ -4,7 +4,6 @@ import axios from 'axios';
 import NavbarINVESTOR from '../../components/NavbarINVESTOR.js';
 
 const LoanRequests = () => {
-    const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
     const [loanRequests, setLoanRequests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +20,7 @@ const LoanRequests = () => {
                     return;
                 }
 
-                const response = await axios.get(`${backendUrl}/api/investors/loan-requests`, {
+                const response = await axios.get("https://financers-hub.onrender.com/api/investors/loan-requests", {
                     headers: { Authorization: `Bearer ${token}` }  
                 });
 
@@ -51,7 +50,7 @@ const LoanRequests = () => {
             }
     
             await axios.put(
-                `${backendUrl}/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
+                "https://financers-hub.onrender.com/api/investors/${decision}-loan/${loanId}", // Corrected endpoint
                 { investorId }, // Sending investorId in the request body
                 { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
             );
