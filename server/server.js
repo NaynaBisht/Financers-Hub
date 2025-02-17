@@ -23,8 +23,7 @@ app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
 app.use(cookieParser());
 
 const corsOptions = {
-    origin:'https://financers-hub.vercel.app/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    origin:'http://localhost:3000', 
     credentials:true
 }
 
