@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from 'dotenv';
 import { spawn } from 'child_process';
 
@@ -21,7 +22,15 @@ const MONGO_URI = process.env.MONGO_URI;
 // Middleware
 app.use(express.json()); // JSON Parser
 app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
-app.use(cors({ origin: 'http://localhost:3000', credentials: true })); // CORS
+app.use(cookieParser());
+
+const corsOptions = {
+    origin:'http://localhost:3000', 
+    credentials:true
+}
+
+app.use(cors(corsOptions));
+
 
 // Database Connection
 const connectDB = async () => {
