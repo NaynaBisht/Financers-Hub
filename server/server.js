@@ -10,9 +10,7 @@ import msmeRoutes from './routes/msmeRoutes.js';
 import investorRoutes from './routes/investorRoutes.js';
 
 // Load environment variables
-dotenv.config();
-
-
+dotenv.config({});
 
 // Initialize Express
 const app = express();
