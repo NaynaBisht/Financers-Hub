@@ -49,7 +49,7 @@ const ApplyLoan = () => {
                 return;
             }
     
-            const response = await fetch("https://financers-hub-server.vercel.app/api/msmes/apply", {
+            const response = await fetch("https://financers-hub-server.vercel.app/api/msmes/apply/${msmeId}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
