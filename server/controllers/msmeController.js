@@ -72,8 +72,10 @@ export const getMsmeId = async (req, res) => {
 // Apply for Loan
 export const applyLoan = async (req, res) => {
     try {
-        const { amount, tenure, purpose, msmeId } = req.body;
-        if (!amount || !tenure || !purpose || !msmeId) {
+        const { msmeId } = req.params; // Get msmeId from URL params
+        const { amount, tenure, purpose } = req.body;
+
+        if (!amount || !tenure || !purpose) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 

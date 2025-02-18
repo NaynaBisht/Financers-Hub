@@ -49,7 +49,8 @@ const ApplyLoan = () => {
                 return;
             }
     
-            const response = await fetch("https://financers-hub-server.vercel.app/api/msmes/apply/${msmeId}", {
+            // Use backticks for proper string interpolation
+            const response = await fetch(`https://financers-hub-server.vercel.app/api/msmes/apply/${storedMsmeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,6 +68,7 @@ const ApplyLoan = () => {
                 setMessage(result.message || 'Error submitting loan application.');
             }
         } catch (error) {
+            console.error("Error submitting loan application:", error);
             setMessage('An error occurred. Please try again.');
         }
     };

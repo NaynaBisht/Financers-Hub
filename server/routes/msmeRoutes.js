@@ -32,6 +32,6 @@ router.get('/user/msme-id', getMsmeId);
 router.get('/all-loans/:msmeId', authMiddleware, getUserLoans);
 
 // MSMEs apply for a loan
-router.post('/apply', authMiddleware, applyLoan);
+router.post('/apply/:msmeId', authMiddleware, applyLoan);
 
 export default router;
