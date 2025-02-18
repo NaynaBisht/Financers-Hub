@@ -50,7 +50,7 @@ const LoanRequests = () => {
             }
     
             await axios.put(
-                "https://financers-hub-server.vercel.app/api/investors/${decision}-loan/${loanId}", // Corrected endpoint
+                `https://financers-hub-server.vercel.app/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
                 { investorId }, // Sending investorId in the request body
                 { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
             );

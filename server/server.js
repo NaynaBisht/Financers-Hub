@@ -22,22 +22,23 @@ app.use(express.json()); // JSON Parser
 app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
 app.use(cookieParser());
 
+// "https://financers-hub.vercel.app",
+const allowedOrigins = ["http://localhost:3000", "https://financers-hub.vercel.app"];
+
 const corsOptions = {
-    origin: [
-        "https://financers-hub.vercel.app"
-    ],
+    origin: function (origin, callback) {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ Allow common HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"] // ✅ Allow necessary headers
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], 
+    allowedHeaders: ["Content-Type", "Authorization"] 
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ Handle preflight requests
-
-
-app.use(cors(corsOptions));
-
-
 // Database Connection
 const connectDB = async () => {
     try {

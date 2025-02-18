@@ -104,7 +104,7 @@ const LoanStatus = () => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-300 text-lg">
+          <p className="text-center text-lg">
             No loans found for this MSME.
           </p>
         )}

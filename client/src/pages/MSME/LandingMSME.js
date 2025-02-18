@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const LandingMSME = () => {  
-
+    const { msmeId: msmeIdFromParams } = useParams(); // Get msmeId from URL params
     const [msmeId, setMsmeId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,18 +13,30 @@ const LandingMSME = () => {
     useEffect(() => {
         const fetchMSMEId = async () => {
             try {
-                const storedId = localStorage.getItem("msmeId");
-                if (storedId) {
+                // Check if msmeId is in URL params
+                if (msmeIdFromParams) {
+                    setMsmeId(msmeIdFromParams);
+                    localStorage.setItem("msmeId", msmeIdFromParams); // Store in localStorage
                     setLoading(false);
                     return;
                 }
 
+                // Check if msmeId is in localStorage
+                const storedId = localStorage.getItem("msmeId");
+                if (storedId) {
+                    setMsmeId(storedId);
+                    setLoading(false);
+                    return;
+                }
+
+                // If msmeId is not in localStorage or URL params, fetch it from the API
                 const response = await axios.get("/api/msmes/msme-id", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
                 });
                 localStorage.setItem("msmeId", response.data.msmeId);
+                setMsmeId(response.data.msmeId);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching MSME ID:", error);
@@ -34,17 +46,17 @@ const LandingMSME = () => {
         };
 
         fetchMSMEId();
-    }, []);
+    }, [msmeIdFromParams]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
     if (!msmeId) return <p>Error: MSME ID not found</p>;
-    console.log("MSME ID:", msmeId)
+
+    console.log("MSME ID:", msmeId);
 
     return (
         <div>
             <NavbarMSME />  
-
             <div className="text-center p-4">
                 <h1 className="text-4xl mt-4 font-extrabold text-[#2B1308] md:text-5xl">Welcome to Financer's Hub for MSMEs</h1>
                 <p className="mt-3 text-xl text-gray-700">Unlock Your Business Potential</p>
@@ -57,7 +69,7 @@ const LandingMSME = () => {
 
                 {/* Call to Action Buttons */}
                 <div className="mt-4 gap-5 flex flex-col md:flex-row justify-center">
-                    <Link to="/msmes/apply-loan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to="/msmes/apply-loan/${msmeId}" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Apply for a Loan
                     </Link>
                     <Link to={`/msmes/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">

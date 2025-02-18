@@ -35,18 +35,18 @@ const App = () => {
           <Route path="/msmes/dashboard/:msmeId" element={<Dashboard />} />
           <Route path="/msmes/apply-loan/:msmeId" element={<ApplyLoan />} />
           <Route path="/msmes/profile/:msmeId" element={<Profile />} />
-          <Route path="/msmes/gov-schemes" element={<GovSchemes />} />
-          <Route path="/msmes/financial-literacy" element={<FinancialLiteracy />} />
+          <Route path="/msmes/gov-schemes/:msmeId" element={<GovSchemes />} />
+          <Route path="/msmes/financial-literacy/:msmeId" element={<FinancialLiteracy />} />
           <Route path="/msmes/loan-status/:msmeId" element={<LoanStatus />} />
-          <Route path="/msmes/support" element={<Support />} />
+          <Route path="/msmes/support/:msmeId" element={<Support />} />
 
           {/* Investor Routes */}
-          <Route path="/investors" element={<LandingInvestor />} />
-          <Route path="/investors/register" element={<RegisterInvestor />} />
-          <Route path="/investors/loan-status/:id" element={<LoanStatusInvestor />} />
-          <Route path="/investors/profile" element={<ProfileInvestor />} />
-          <Route path="/investors/support" element={<SupportINV />} />
-          <Route path="/investors/loan-requests" element={<LoanRequests />} />
+          <Route path="/investors/:investorId" element={<LandingInvestor />} />
+          <Route path="/investors/register/:investorId" element={<RegisterInvestor />} />
+          <Route path="/investors/loan-status/:investorId" element={<LoanStatusInvestor />} />
+          <Route path="/investors/profile/:investorId" element={<ProfileInvestor />} />
+          <Route path="/investors/support/:investorId" element={<SupportINV />} />
+          <Route path="/investors/loan-requests/:investorId" element={<LoanRequests />} />
         </Routes>
 
         {/* Global Chatbot Component */}

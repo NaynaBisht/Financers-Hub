@@ -72,7 +72,15 @@ const RegisterInvestor = () => {
                 });
                 console.log('Sign Up Response:', response.data);
                 setError(null); // Reset error on success
-                setFormData({ // Reset the form data
+
+                // Store investorId and token in localStorage
+                if (response.data.investorId && response.data.token) {
+                    localStorage.setItem("investorId", response.data.investorId);
+                    localStorage.setItem("token", response.data.token);
+                }
+
+                // Reset the form data
+                setFormData({
                     fullName: '',
                     dateOfBirth: '',
                     contactInfo: '',
@@ -83,16 +91,16 @@ const RegisterInvestor = () => {
                     employerName: '',
                     businessAddress: '',
                     position: '',
-                    riskTolerance: 'Conservative', // Default option
+                    riskTolerance: 'Conservative',
                     amountToInvest: '',
                     netWorthDocs: null,
                     sourceOfFundsDocs: null,
                     investmentExperienceDocs: null,
                     termsAccepted: false,
-                    password: '', // Reset password
+                    password: '',
                 });
+
                 setIsSignUp(false); // Switch to Sign In state
-                setFormData({ ...formData, email: response.data.email }); // Preserve the email    
             } else {
                 // Handle Sign In logic
                 const response = await axios.post("https://financers-hub-server.vercel.app/api/investors/login", {
@@ -101,10 +109,14 @@ const RegisterInvestor = () => {
                 });
                 console.log('Sign In Response:', response.data);
 
-                const { token, investorId } = response.data;
-                localStorage.setItem('authToken', token);
-                localStorage.setItem('investorId', investorId);
-                navigate('/investor', { replace: true }); 
+                // Store investorId and token in localStorage
+                if (response.data.investorId && response.data.token) {
+                    localStorage.setItem("investorId", response.data.investorId);
+                    localStorage.setItem("token", response.data.token);
+                }
+
+                // Redirect to the investor dashboard or landing page
+                navigate(`/investors/${response.data.investorId}`);
             }
         } catch (error) {
             console.error('Error during API call:', error.response ? error.response.data : error.message);
@@ -128,7 +140,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="fullName">Full Name</label>
                                     <input
                                         id="fullName"
-                                        name="fullName" // Ensure name is set
+                                        name="fullName"
                                         type="text"
                                         value={formData.fullName}
                                         onChange={handleInputChange}
@@ -140,7 +152,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="dateOfBirth">Date of Birth</label>
                                     <input
                                         id="dateOfBirth"
-                                        name="dateOfBirth" // Ensure name is set
+                                        name="dateOfBirth"
                                         type="date"
                                         value={formData.dateOfBirth}
                                         onChange={handleInputChange}
@@ -152,7 +164,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="email">Email Address</label>
                                     <input
                                         id="email"
-                                        name="email" // Ensure name is set
+                                        name="email"
                                         type="email"
                                         value={formData.email}
                                         onChange={handleInputChange}
@@ -164,7 +176,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="phone">Phone Number</label>
                                     <input
                                         id="phone"
-                                        name="phone" // Ensure name is set
+                                        name="phone"
                                         type="tel"
                                         value={formData.phone}
                                         onChange={handleInputChange}
@@ -176,7 +188,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="idNumber">Identification Number</label>
                                     <input
                                         id="idNumber"
-                                        name="idNumber" // Ensure name is set
+                                        name="idNumber"
                                         type="text"
                                         value={formData.idNumber}
                                         onChange={handleInputChange}
@@ -188,7 +200,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="occupation">Occupation/Profession</label>
                                     <input
                                         id="occupation"
-                                        name="occupation" // Ensure name is set
+                                        name="occupation"
                                         type="text"
                                         value={formData.occupation}
                                         onChange={handleInputChange}
@@ -200,7 +212,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="employerName">Employer Name</label>
                                     <input
                                         id="employerName"
-                                        name="employerName" // Ensure name is set
+                                        name="employerName"
                                         type="text"
                                         value={formData.employerName}
                                         onChange={handleInputChange}
@@ -212,7 +224,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="businessAddress">Business Address</label>
                                     <input
                                         id="businessAddress"
-                                        name="businessAddress" // Ensure name is set
+                                        name="businessAddress"
                                         type="text"
                                         value={formData.businessAddress}
                                         onChange={handleInputChange}
@@ -224,7 +236,7 @@ const RegisterInvestor = () => {
                                     <label className="block font-bold text-lg mb-1" htmlFor="position">Position/Title</label>
                                     <input
                                         id="position"
-                                        name="position" // Ensure name is set
+                                        name="position"
                                         type="text"
                                         value={formData.position}
                                         onChange={handleInputChange}
@@ -233,17 +245,17 @@ const RegisterInvestor = () => {
                                     />
                                 </div>
                                 <div className="mb-4">
-                                <label className="block font-bold text-lg mb-1" htmlFor="password">Password</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    required
-                                    className="border rounded w-full p-2"
-                                />
-                            </div>
+                                    <label className="block font-bold text-lg mb-1" htmlFor="password">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                        required
+                                        className="border rounded w-full p-2"
+                                    />
+                                </div>
                             </div>
 
                             {/* Risk Tolerance */}
@@ -267,7 +279,7 @@ const RegisterInvestor = () => {
                                 <label className="block font-bold text-lg mb-1" htmlFor="amountToInvest">Amount Intended to Invest</label>
                                 <input
                                     id="amountToInvest"
-                                    name="amountToInvest" // Ensure name is set
+                                    name="amountToInvest"
                                     type="number"
                                     value={formData.amountToInvest}
                                     onChange={handleInputChange}
@@ -320,8 +332,6 @@ const RegisterInvestor = () => {
                                 />
                                 <label htmlFor="termsAccepted" className="text-lg">I accept the terms and conditions</label>
                             </div>
-
-                            
                         </>
                     ) : (
                         <>
@@ -366,6 +376,5 @@ const RegisterInvestor = () => {
         </div>
     );
 };
-
 
 export default RegisterInvestor;

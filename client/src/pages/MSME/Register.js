@@ -80,6 +80,7 @@ const Register = () => {
                     email: formData.email,
                     password: formData.password,
                 });
+                // https://financers-hub-server.vercel.app
     
                 console.log("Sign In Response:", response.data);
     
