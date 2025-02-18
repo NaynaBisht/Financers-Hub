@@ -65,7 +65,7 @@ const RegisterInvestor = () => {
                     formDataToSend.append(key, formData[key]);
                 });
 
-                const response = await axios.post("https://financers-hub.onrender.com/api/investors/register", formDataToSend, {
+                const response = await axios.post("https://financers-hub-server.vercel.app/api/investors/register", formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -95,7 +95,7 @@ const RegisterInvestor = () => {
                 setFormData({ ...formData, email: response.data.email }); // Preserve the email    
             } else {
                 // Handle Sign In logic
-                const response = await axios.post("https://financers-hub.onrender.com/api/investors/login", {
+                const response = await axios.post("https://financers-hub-server.vercel.app/api/investors/login", {
                     email: formData.email,
                     password: formData.password,
                 });

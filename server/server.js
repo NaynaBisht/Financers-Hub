@@ -24,8 +24,7 @@ app.use(cookieParser());
 
 const corsOptions = {
     origin: [
-        "https://financers-hub.vercel.app",  // ✅ Allow Vercel frontend
-        "https://financers-hub.onrender.com" // ✅ Allow backend
+        "https://financers-hub.vercel.app"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ Allow common HTTP methods
