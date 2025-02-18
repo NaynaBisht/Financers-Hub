@@ -32,9 +32,9 @@ const App = () => {
           {/* MSME Routes */}
           <Route path="/msmes/:msmeId" element={<LandingMSME />} />
           <Route path="/msmes/register" element={<Register />} />
-          <Route path="/msmes/dashboard" element={<Dashboard />} />
-          <Route path="/msmes/apply-loan" element={<ApplyLoan />} />
-          <Route path="/msmes/profile" element={<Profile />} />
+          <Route path="/msmes/dashboard/:msmeId" element={<Dashboard />} />
+          <Route path="/msmes/apply-loan/:msmeId" element={<ApplyLoan />} />
+          <Route path="/msmes/profile/:msmeId" element={<Profile />} />
           <Route path="/msmes/gov-schemes" element={<GovSchemes />} />
           <Route path="/msmes/financial-literacy" element={<FinancialLiteracy />} />
           <Route path="/msmes/loan-status/:msmeId" element={<LoanStatus />} />
