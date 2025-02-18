@@ -23,9 +23,18 @@ app.use(express.urlencoded({ extended: true })); // URL Encoded Parser
 app.use(cookieParser());
 
 const corsOptions = {
-    origin:'https://financers-hub.onrender.com', 
-    credentials:true
-}
+    origin: [
+        "https://financers-hub.vercel.app",  // ✅ Allow Vercel frontend
+        "https://financers-hub.onrender.com" // ✅ Allow backend
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ Allow common HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"] // ✅ Allow necessary headers
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // ✅ Handle preflight requests
+
 
 app.use(cors(corsOptions));
 
