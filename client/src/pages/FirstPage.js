@@ -28,7 +28,7 @@ const FirstPage = () => {
               FinancersHub provides a platform for MSMEs to apply for funding,
               manage credit score reports, and present investment opportunities.
             </p>
-            <a href="/msme/register" className="button">Explore MSMEs</a>
+            <a href="/msmes/register" className="button">Explore MSMEs</a>
           </div>
         </section>
 
@@ -40,7 +40,7 @@ const FirstPage = () => {
               FinancersHub enables investors to discover promising MSMEs, review
               financial reports, and make informed investment decisions.
             </p>
-            <a href="/investor/register" className="button">Explore Investors</a>
+            <a href="/investors/register" className="button">Explore Investors</a>
           </div>
         </section>
       </main>

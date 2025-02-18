@@ -88,7 +88,7 @@ const Register = () => {
                     localStorage.setItem("token", response.data.token); // Store token
                 }
     
-                navigate("/msme"); // Redirect to the landing page
+                navigate(`/msmes/${response.data.msmeId}`);
             }
         } catch (error) {
             console.error("Error during API call:", error);
