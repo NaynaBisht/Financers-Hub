@@ -86,9 +86,8 @@ const Register = () => {
                 if (response.data.msmeId && response.data.token) {
                     localStorage.setItem("msmeId", response.data.msmeId);
                     localStorage.setItem("token", response.data.token); // Store token
+                    navigate(`/msmes/${response.data.msmeId}`)
                 }
-    
-                navigate(`/msmes/${response.data.msmeId}`);
             }
         } catch (error) {
             console.error("Error during API call:", error);

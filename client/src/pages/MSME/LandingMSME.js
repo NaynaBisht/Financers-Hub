@@ -7,26 +7,28 @@ import axios from "axios";
 const LandingMSME = () => {  
 
     const [msmeId, setMsmeId] = useState(null);
-
-    useEffect(() => {
-        const storedId = localStorage.getItem("msmeId");  // Try fetching from localStorage
-        if (storedId) {
-            setMsmeId(storedId);
-        } else {
-            console.error("MSME ID not found");
-        }
-    }, []);
-
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchMSMEId = async () => {
             try {
-                const response = await axios.get("/api/msmes/msme-id");
-                setMsmeId(response.data.msmeId);
+                const storedId = localStorage.getItem("msmeId");
+                if (storedId) {
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await axios.get("/api/msmes/msme-id", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                localStorage.setItem("msmeId", response.data.msmeId);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching MSME ID:", error);
-            } finally {
+                setError("Error fetching MSME ID");
                 setLoading(false);
             }
         };
@@ -35,10 +37,9 @@ const LandingMSME = () => {
     }, []);
 
     if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
     if (!msmeId) return <p>Error: MSME ID not found</p>;
-
-    console.log("MSME ID:", msmeId);
-
+    console.log("MSME ID:", msmeId)
 
     return (
         <div>
@@ -56,10 +57,10 @@ const LandingMSME = () => {
 
                 {/* Call to Action Buttons */}
                 <div className="mt-4 gap-5 flex flex-col md:flex-row justify-center">
-                    <Link to="/msme/apply-loan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to="/msmes/apply-loan" className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Apply for a Loan
                     </Link>
-                    <Link to={`/msme/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
+                    <Link to={`/msmes/loan-status/${msmeId}`} className="bg-[#98473E] text-white py-3 px-8 rounded-full text-lg font-semibold hover:bg-[#B49082] transition duration-300">
                         Loan Status
                     </Link>
                 </div>
