@@ -59,7 +59,7 @@ const Register = () => {
                     formDataToSend.append(key, formData[key]);
                 });
     
-                const response = await axios.post("https://financers-hub-server.vercel.app/api/msmes/register", formDataToSend, {
+                const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/msmes/register`, formDataToSend, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -76,7 +76,7 @@ const Register = () => {
                 setIsSignUp(false); // Switch to Sign In state
             } else {
                 // Handle Sign In logic
-                const response = await axios.post("https://financers-hub-server.vercel.app/api/msmes/login", {
+                const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/msmes/login`, {
                     email: formData.email,
                     password: formData.password,
                 });

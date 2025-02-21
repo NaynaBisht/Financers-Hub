@@ -68,7 +68,7 @@ app.post('/api/chatbot', (req, res) => {
         return res.status(400).json({ success: false, message: 'User input is required' });
     }
 
-    const pythonProcess = spawn('python3', ['utils/implement.py', userInput]);
+    const pythonProcess = spawn('python3', ['utils/scheme.py', userInput]);
 
     let output = '';
     pythonProcess.stdout.on('data', (data) => {

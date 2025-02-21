@@ -27,7 +27,7 @@ const NavbarINVESTOR = () => {
         </div>
 
         <ul className={`hidden md:flex space-x-7 text-white`}>
-          <li><Link to="/investors">Home</Link></li>
+          <li><Link to="/investors/:investorId">Home</Link></li>
           <li><Link to="/investors/supportinv">Support</Link></li>
           <li><Link to="/investors/profile">Profile</Link></li>
         </ul>

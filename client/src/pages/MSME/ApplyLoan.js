@@ -50,7 +50,7 @@ const ApplyLoan = () => {
             }
     
             // Use backticks for proper string interpolation
-            const response = await fetch(`https://financers-hub-server.vercel.app/api/msmes/apply/${storedMsmeId}`, {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/msmes/apply/${storedMsmeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

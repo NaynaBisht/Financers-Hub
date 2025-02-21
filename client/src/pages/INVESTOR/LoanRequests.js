@@ -20,7 +20,7 @@ const LoanRequests = () => {
                     return;
                 }
 
-                const response = await axios.get("https://financers-hub-server.vercel.app/api/investors/loan-requests", {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/investors/loan-requests`, {
                     headers: { Authorization: `Bearer ${token}` }  
                 });
 
@@ -50,7 +50,7 @@ const LoanRequests = () => {
             }
     
             await axios.put(
-                `https://financers-hub-server.vercel.app/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
+                `${process.env.REACT_APP_BACKEND_URL}/api/investors/${decision}-loan/${loanId}`, // Corrected endpoint
                 { investorId }, // Sending investorId in the request body
                 { headers: { Authorization: `Bearer ${token}` } } // Corrected token usage
             );

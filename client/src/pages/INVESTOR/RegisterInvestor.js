@@ -65,7 +65,7 @@ const RegisterInvestor = () => {
                     formDataToSend.append(key, formData[key]);
                 });
 
-                const response = await axios.post("https://financers-hub-server.vercel.app/api/investors/register", formDataToSend, {
+                const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/investors/register`, formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

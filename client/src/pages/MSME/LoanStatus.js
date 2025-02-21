@@ -9,72 +9,87 @@ const LoanStatus = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    console.log("MSME ID:", msmeId);
-
-    const fetchLoanStatus = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("Unauthorized: No token found!");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get(
-          "https://financers-hub-server.vercel.app/api/msmes/all-loans/${msmeId}",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log("API Full Response:", response);
-        console.log("API Response Data:", response.data);
-        console.log("API Data Type:", typeof response.data.data);
-        console.log("API Data:", response.data.data);
-
-        // Ensure the response is always an array
-        const data = response.data.data;
-        if (Array.isArray(data)) {
-          setLoans(data);
-        } else if (typeof data === "object" && data !== null) {
-          setLoans([data]); // Convert single object into an array
-        } else {
-          setLoans([]);
-        }
-      } catch (error) {
-        console.error("Error fetching loan status:", error);
-        setError("Failed to fetch loan status.");
-      } finally {
+  // Define fetchLoanStatus outside of useEffect
+  const fetchLoanStatus = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Unauthorized: No token found!");
         setLoading(false);
+        return;
       }
-    };
 
-    if (msmeId) {
-      fetchLoanStatus();
-    } else {
-      setError("MSME ID is missing!");
+      if (!msmeId || typeof msmeId !== "string") {
+        setError("Invalid MSME ID!");
+        setLoading(false);
+        return;
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/msmes/all-loans/${msmeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("API Full Response:", response);
+      console.log("API Response Data:", response.data);
+      console.log("API Data Type:", typeof response.data.data);
+      console.log("API Data:", response.data.data);
+
+      // Ensure the response is always an array
+      const data = response.data.data;
+      setLoans(Array.isArray(data) ? data : data ? [data] : []);
+    } catch (error) {
+      console.error("Error fetching loan status:", error);
+      if (error.response) {
+        setError(`Server Error: ${error.response.data.message || "Unknown error"}`);
+      } else if (error.request) {
+        setError("No response from the server. Please try again.");
+      } else {
+        setError(`Request Error: ${error.message}`);
+      }
+    } finally {
       setLoading(false);
     }
+  };
+
+  // Call fetchLoanStatus inside useEffect
+  useEffect(() => {
+    console.log("MSME ID:", msmeId);
+    fetchLoanStatus();
   }, [msmeId]);
+
+  // Refresh function
+  const refreshLoanStatus = () => {
+    setLoading(true);
+    setError(null);
+    fetchLoanStatus(); // Now fetchLoanStatus is accessible
+  };
 
   return (
     <div>
       <NavbarMSME />
       <h2 className="text-3xl font-bold mb-5 mt-4 bg-[#C25D39] text-center text-white p-3 rounded-lg border">
-          Loan Status
-        </h2>
+        Loan Status
+      </h2>
       <div className="p-6 max-w-5xl mx-auto">
-        
-
         {loading ? (
           <p className="text-center text-gray-300 text-lg animate-pulse">
             Loading...
           </p>
         ) : error ? (
-          <p className="text-red-400 text-center font-semibold">{error}</p>
+          <div className="text-center">
+            <p className="text-red-400 font-semibold">{error}</p>
+            <button
+              onClick={refreshLoanStatus}
+              className="mt-4 px-4 py-2 bg-[#C25D39] text-white rounded-lg hover:bg-[#8B3C20]"
+            >
+              Refresh
+            </button>
+          </div>
         ) : loans.length > 0 ? (
           <div className="grid gap-6">
             {loans.map((loan) => (

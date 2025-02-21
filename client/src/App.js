@@ -42,7 +42,7 @@ const App = () => {
 
           {/* Investor Routes */}
           <Route path="/investors/:investorId" element={<LandingInvestor />} />
-          <Route path="/investors/register/:investorId" element={<RegisterInvestor />} />
+          <Route path="/investors/register" element={<RegisterInvestor />} />
           <Route path="/investors/loan-status/:investorId" element={<LoanStatusInvestor />} />
           <Route path="/investors/profile/:investorId" element={<ProfileInvestor />} />
           <Route path="/investors/support/:investorId" element={<SupportINV />} />
